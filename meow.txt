@@ -1,0 +1,2 @@
+pip install alembic sqlalchemy psycopg2-binary python-dotenv
+alembic init alembic
