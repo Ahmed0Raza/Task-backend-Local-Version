@@ -12,14 +12,19 @@ def get_db():
     finally:
         db.close()
 
-async def verify_token(request: Request, call_next):
+
+async def verify_token(request: Request):
     auth_header = request.headers.get("Authorization")
     if not auth_header:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="No token provided.")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="No token provided."
+        )
 
     try:
         jwt.decode(auth_header, JWT_SECRET, algorithms=["HS256"])
     except JWTError as e:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=str(e))
-
-    return await call_next(request)
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail=f"Invalid token: {str(e)}"
+        )
