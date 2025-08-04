@@ -1,11 +1,9 @@
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter
 from app.controllers.taskControllers import createTask, updateTask, deleteTask, fetchTask
-from app.middleware.auth import verify_token
 
 router = APIRouter()
 
-# Apply verify_token only to protected routes
-router.post("/createTask", dependencies=[Depends(verify_token)])(createTask)
-router.put("/updateTask/{task_id}", dependencies=[Depends(verify_token)])(updateTask)
-router.delete("/deleteTask/{task_id}", dependencies=[Depends(verify_token)])(deleteTask)
-router.get("/fetchTask/{task_id}", dependencies=[Depends(verify_token)])(fetchTask)
+router.post("/createTask")(createTask)
+router.put("/updateTask/{task_id}")(updateTask)
+router.delete("/deleteTask/{task_id}")(deleteTask)
+router.get("/fetchTask/{task_id}")(fetchTask)

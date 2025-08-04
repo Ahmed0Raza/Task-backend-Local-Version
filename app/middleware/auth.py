@@ -16,15 +16,11 @@ def get_db():
 async def verify_token(request: Request):
     auth_header = request.headers.get("Authorization")
     if not auth_header:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="No token provided."
-        )
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="No token provided.")
 
     try:
-        jwt.decode(auth_header, JWT_SECRET, algorithms=["HS256"])
+        payload = jwt.decode(auth_header, JWT_SECRET, algorithms=["HS256"])
+        return payload  # 👈 Must include user_id in payload at token creation
     except JWTError as e:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f"Invalid token: {str(e)}"
-        )
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=f"Invalid token: {str(e)}")
+
